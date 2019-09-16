@@ -44,27 +44,122 @@
       <p class="affiliation"><a href="http://idlab.technology/">Ghent University – imec – IDLab, Belgium</a></p>
     </section>
     
-    <section id="start" class="slide" inlist="" rel="schema:hasPart" resource="#start" style="background-image: url('img/diamond.jpg')">
-        <h2 class="big" style="margin-top: 20px; color: white; text-shadow: 2px 2px black">Some title</h2>
-        <ul style="color: white; text-shadow: 2px 2px black; font-size: 1.3em">
-            <li>...</li>
-        </ul>
+    <section id="start" class="slide center" inlist="" rel="schema:hasPart" resource="#start" style="background-image: url('img/boxes.jpg'); background-size: cover">
+        <h2 property="schema:name" class="big" style="margin-top: 40px; color: white; text-shadow: 5px 5px black; text-align:left"><strong>Versioning:</strong> Variants of datasets exist<br />in parallel</h2>
+        <p>
+            <ul style="margin-top: -20px; margin-left: 20px; color: white; text-shadow: 2px 2px black; text-align:left; font-size: 1.2em;" class="next">
+                <li>DBpedia 2015</li>
+                <li>DBpedia 2016</li>
+                <li>DBpedia 2014</li>
+                <li>...</li>
+            </ul>
+        </p>
+        <h3 class="next" style="color:white; text-shadow: 2px 2px black; font-size: 1.2em;">How to store multiple RDF dataset versions<br />to enable efficient versioned queries?</h3>
     </section>
     
     <section id="index" class="slide index">
       <ul>
-        <li><a href="#index-a">Part A</a></li>
-        <li><a href="#index-b">Part B</a></li>
-        <li><a href="#index-c">Part C</a></li>
+        <li><a href="#index-fundamentals">RDF Versioning Fundamentals</a></li>
+        <li><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
+        <li><a href="#index-evaluation">Evaluation</a></li>
       </ul>
     </section>
     
-    <section id="index-a" class="slide index">
+    <section id="rdf-versioning" class="slide" inlist="" rel="schema:hasPart" resource="#rdf-versioning">
+      <span style="float: right"><em>Fernández et al. 2018</em></span>
+      <h2 property="schema:name">RDF Versioning</h2>
+      <div class="next">
+          <h3 style="margin-bottom: 0em">RDF Version <em>(i)</em></h3>
+          <p style="float: right; color: gray; font-style: italic">DBpedia 2015, DBpedia 2016, ...</p>
+          <p class="indent">Set of triples annotated with version label <em>i</em></p>
+      </div>
+      <div class="next">
+          <p><h3>Query atoms</h3></p>
+          <ul>
+              <li><strong>Version Materialization (VM)</strong>:
+                  <p style="float: right; color: gray; font-style: italic">Which cities existed in (DBpedia) 2016?</p>
+                  <br/>
+                  <span class="indent">Query a <em>single</em> version</span>
+              </li>
+              <li><strong>Delta Materialization (DM)</strong>:
+                  <p style="float: right; color: gray; font-style: italic">Which cities were created or<br />removed between 2015 and 2016?</p>
+                  <br/>
+                  <span class="indent">Query <em>differences</em> between 2 versions</span>
+              </li>
+              <li><strong>Version Query (VQ)</strong>:
+                  <p style="float: right; color: gray; font-style: italic">In which years has Brussels existed?</p>
+                  <br/>
+                  <span style="display: block" class="indent">Query <em>all</em> versions,<br />results are <em>annotated</em> with their versions</span>
+              </li>
+          </ul>
+      </div>
+    </section>
+    
+    <section id="versioning-storage" class="slide" inlist="" rel="schema:hasPart" resource="#versioning-storage">
+      <span style="float: right"><em>Fernández et al. 2018</em></span>
+      <h2 property="schema:name">Versioning Storage Strategies</h2>
       <ul>
-        <li class="current"><a href="#index-a">Part A</a></li>
-        <li><a href="#index-b">Part B</a></li>
-        <li><a href="#index-c">Part C</a></li>
+          <li><h3 style="margin-top: 0">Independent Copies (IC)</h3>
+              <span class="indent">Stores every version completely.</span>
+              <br />
+              <span class="indent">+ Fast VM.</span>
+              <br />
+              <span class="indent">- Slow DM and VQ, a lot of storage space.</span>
+          </li>
+          <li><h3 style="margin-top: 0">Change-Based (CB)</h3>
+              <span class="indent">Stores differences between consecutive versions.</span>
+              <br />
+              <span class="indent">+ Fast DM, less storage space for small changes.</span>
+              <br />
+              <span class="indent">- Slow VM and VQ.</span>
+          </li>
+          <li><h3 style="margin-top: 0">Timestamp-Based (TB)</h3>
+              <span class="indent">Stores temporal validity of each triple.</span>
+              <br />
+              <span class="indent">+ Fast VQ, less storage space for overlapping versions.</span>
+              <br />
+              <span class="indent">- Slow VM and DM.</span>
+          </li>
       </ul>
+    </section>
+    
+    <section id="index-fundamentals" class="slide index">
+      <ul>
+        <li class="current"><a href="#index-fundamentals">RDF Versioning Fundamentals</a></li>
+        <li><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
+        <li><a href="#index-evaluation">Evaluation</a></li>
+      </ul>
+    </section>
+    
+    <section id="index-approach" class="slide index">
+      <ul>
+        <li><a href="#index-fundamentals">RDF Versioning Fundamentals</a></li>
+        <li class="current"><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
+        <li><a href="#index-evaluation">Evaluation</a></li>
+      </ul>
+    </section>
+    
+    <section id="index-evaluation" class="slide index">
+      <ul>
+        <li><a href="#index-fundamentals">RDF Versioning Fundamentals</a></li>
+        <li><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
+        <li class="current"><a href="#index-evaluation">Evaluation</a></li>
+      </ul>
+    </section>
+    
+    <section id="index-final" class="slide index">
+      <ul>
+        <li><a href="#index-fundamentals">RDF Versioning Fundamentals</a></li>
+        <li><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
+        <li><a href="#index-evaluation">Evaluation</a></li>
+      </ul>
+    </section>
+    
+    <section id="conclusions" class="slide" inlist="" rel="schema:hasPart" resource="#conclusions">
+        <h2 property="schema:name">Conclusions</h2>
+        <ul>
+            <li>TODO</li>
+        </ul>
     </section>
 
     <footer>
