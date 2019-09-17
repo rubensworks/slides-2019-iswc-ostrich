@@ -186,19 +186,19 @@
     <section id="querying-algos" class="slide" inlist="" rel="schema:hasPart" resource="#querying-algos">
       <h2 property="schema:name">Streaming, offset-enabled querying</h2>
       <ul>
-          <li class="next">
+          <li>
               <h3>Triple pattern queries</h3>
               <p class="indent">The foundational elements of SPARQL engines.</p>
           </li>
-          <li class="next">
+          <li>
               <h3>Streaming</h3>
               <p class="indent">Triple-by-triple processing of results is more memory efficient.</p>
           </li>
-          <li class="next">
+          <li>
               <h3>Offsets</h3>
               <p class="indent">Reduces processing time if only a subset is needed. <em>(e.g. pagination)</em></p>
           </li>
-          <li class="next">
+          <li>
               <h3>Algorithms for each query atom (VM, DM, VQ)</h3>
               <p class="indent"><em>Algorithms are explained in the paper.</em></p>
           </li>
@@ -211,6 +211,81 @@
         <li><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
         <li class="current"><a href="#index-evaluation">Evaluation</a></li>
       </ul>
+    </section>
+    
+    <section id="implementation" class="slide" inlist="" rel="schema:hasPart" resource="#implementation">
+      <h2 property="schema:name">Implementation: OSTRICH</h2>
+      <center><img src="img/ostrich-square.png" alt="OSTRICH" width="150px" /></center>
+      <ul>
+          <li><em>Offset-enabled STore for TRIple CHangesets</em></li>
+          <li>Implemented in C/C++</li>
+          <li><a href="https://github.com/rdfostrich/ostrich">Open-source</a></li>
+          <li>Uses HDT for snapshots, and Kyoto Cabinet (B+Tree) for deltas</li>
+      </ul>
+    </section>
+    
+    <section id="bear" class="slide" inlist="" rel="schema:hasPart" resource="#bear">
+      <span style="float: right"><em>Fernández et al. 2018</em></span>
+      <h2 property="schema:name">Evaluation using BEAR</h2>
+      <center><img src="img/bear.png" alt="BEAR" width="150px" /></center>
+      <ul>
+          <li><em>BEnchmark for rdf ARchives</em></li>
+          <li>Based on three real-world datasets from different domains</li>
+          <li>Triple pattern queries for the different query atoms</li>
+          <li>Baseline implementations of different storage strategies using HDT and Jena</li>
+      </ul>
+    </section>
+    
+    <section id="experiments" class="slide" inlist="" rel="schema:hasPart" resource="#experiments">
+      <h2 property="schema:name">Experiments</h2>
+      <ul>
+          <li>
+              <h3>Storage</h3>
+              <p class="indent">Storage sizes and ingestion times.</p>
+          </li>
+          <li>
+              <h3>Querying</h3>
+              <p class="indent">Query execution times for the different triple pattern query atoms.</p>
+          </li>
+      </ul>
+      <p><em>We highlight some results, more results can be found in the paper.</em></p>
+    </section>
+    
+    <section id="storage-large" class="slide" inlist="" rel="schema:hasPart" resource="#storage-large">
+      <h2 property="schema:name">Storage size and time scale linearly<br />for a few large versions</h2>
+      <p>BEAR-A: 10 versions, 30M~66M triples per version.</p>
+      <center>
+        <img src="img/storage-size-beara.svg" alt="beara size" width="450px" />
+        <img src="img/storage-time-beara.svg" alt="beara time" width="450px" />
+      </center>
+    </section>
+    
+    <section id="storage-small" class="slide" inlist="" rel="schema:hasPart" resource="#storage-small">
+      <h2 property="schema:name">Storage size and time <em>mostly</em> scale linearly for a many small versions</h2>
+      <p>BEAR-B-hourly: 1299 versions, ~48K triples per version.</p>
+      <center>
+        <img src="img/storage-size-bearb.svg" alt="bearb size" width="380px" /><br />
+        <img src="img/storage-time-bearb.svg" alt="bearb time" width="380px" />
+      </center>
+      <h3 style="margin-top: -16px">&rarr; Delta chain becomes too long after version 1100</h3>
+    </section>
+    
+    <section id="query-vm" class="slide" inlist="" rel="schema:hasPart" resource="#query-vm">
+      <h2 property="schema:name">Version Materialization times are constant with respect to version</h2>
+      <center><img src="img/results_bearb-hourly-vm-summary.svg" alt="vm" width="700px" /></center>
+      <p><em>Median BEAR-B-hourly VM query results for all triple patterns for all versions.</em></p>
+    </section>
+    
+    <section id="query-dm" class="slide" inlist="" rel="schema:hasPart" resource="#query-dm">
+      <h2 property="schema:name">Delta Materialization times are constant with respect to version</h2>
+      <center><img src="img/results_bearb-hourly-dm-summary.svg" alt="dm" width="700px" /></center>
+      <p><em>Median BEAR-B-hourly DM query results for all triple patterns for all versions.</em></p>
+    </section>
+    
+    <section id="query-vq" class="slide" inlist="" rel="schema:hasPart" resource="#query-vq">
+      <h2 property="schema:name">Verqion Queries are always fast</h2>
+      <center><img src="img/results_bearb-hourly-vq-summary.svg" alt="vq" width="800px" /></center>
+      <p><em>Median BEAR-B-hourly VQ query results for all triple patterns.</em></p>
     </section>
     
     <section id="index-final" class="slide index">
