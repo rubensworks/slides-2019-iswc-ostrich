@@ -65,9 +65,17 @@
       </ul>
     </section>
     
+    <section id="index-fundamentals" class="slide index">
+      <ul>
+        <li class="current"><a href="#index-fundamentals">RDF Versioning Fundamentals</a></li>
+        <li><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
+        <li><a href="#index-evaluation">Evaluation</a></li>
+      </ul>
+    </section>
+    
     <section id="rdf-versioning" class="slide" inlist="" rel="schema:hasPart" resource="#rdf-versioning">
       <span style="float: right"><em>Fernández et al. 2018</em></span>
-      <h2 property="schema:name">RDF Versioning</h2>
+      <h2 property="schema:name">RDF versioning</h2>
       <div class="next">
           <h3 style="margin-bottom: 0em">RDF Version <em>(i)</em></h3>
           <p style="float: right; color: gray; font-style: italic">DBpedia 2015, DBpedia 2016, ...</p>
@@ -97,7 +105,7 @@
     
     <section id="versioning-storage" class="slide" inlist="" rel="schema:hasPart" resource="#versioning-storage">
       <span style="float: right"><em>Fernández et al. 2018</em></span>
-      <h2 property="schema:name">Versioning Storage Strategies</h2>
+      <h2 property="schema:name">Versioning storage strategies</h2>
       <ul>
           <li><h3 style="margin-top: 0">Independent Copies (IC)</h3>
               <span class="indent">Stores every version completely.</span>
@@ -123,19 +131,77 @@
       </ul>
     </section>
     
-    <section id="index-fundamentals" class="slide index">
-      <ul>
-        <li class="current"><a href="#index-fundamentals">RDF Versioning Fundamentals</a></li>
-        <li><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
-        <li><a href="#index-evaluation">Evaluation</a></li>
-      </ul>
-    </section>
-    
     <section id="index-approach" class="slide index">
       <ul>
         <li><a href="#index-fundamentals">RDF Versioning Fundamentals</a></li>
         <li class="current"><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
         <li><a href="#index-evaluation">Evaluation</a></li>
+      </ul>
+    </section>
+    
+    <section id="hybrid-overview" class="slide" inlist="" rel="schema:hasPart" resource="#hybrid-overview">
+      <h2 property="schema:name">A hybrid storage approach</h2>
+      <p><em>Combining the best parts of all approaches.</em></p>
+      <ul>
+          <li class="next">
+              <h3>Independent Copy (IC) for the initial version</h3>
+              <p class="indent">Initial version can be stored in an efficient immutable store, such as HDT.</p>
+          </li>
+          <li class="next">
+              <h3>Change-Based (CB) for all following versions</h3>
+              <p class="indent">Instead of storing changes <em>relative to previous version</em>,<br />we make them <em>relative to the snapshot</em>.</p>
+          </li>
+          <li class="next">
+              <h3>Timestamp-Based (TB) storage for the CB chain</h3>
+              <p class="indent">Redundancy between changes is compressed by storing each triple once.</p>
+          </li>
+      </ul>
+    </section>
+    
+    <section id="hybrid-existing" class="slide" inlist="" rel="schema:hasPart" resource="#hybrid-existing">
+      <h2 property="schema:name">Hybrid storage has been done before</h2>
+      <h3>Hybrid Independent Copy (IC) and Change-Based (CB)</h3>
+      <center><img src="img/regular-delta-chain.svg" alt="Regular delta chain" width="100%" /></center>
+      <div class="next">
+          <strong>Problem:</strong><br />For long delta chains, version materialization becomes increasingly expensive.
+      </div>
+    </section>
+    
+    <section id="alternative-delta" class="slide" inlist="" rel="schema:hasPart" resource="#alternative-delta">
+      <h2 property="schema:name">We make deltas relative to the snapshot</h2>
+      <h3>This makes version materialization fast for any version</h3>
+      <center style="font-size: 3em"><img src="img/regular-delta-chain.svg" alt="Regular delta chain" width="40%" /> &rarr; <img src="img/alternative-delta-chain.svg" alt="Alternative delta chain" width="40%" /></center>
+      <div class="next">
+          <strong>Problem:</strong><br />Changes in deltas accumulate, which can lead to a lot of redundancy.
+      </div>
+    </section>
+    
+    <section id="timestamp-based" class="slide" inlist="" rel="schema:hasPart" resource="#timestamp-based">
+      <h2 property="schema:name">We combine all deltas in a combined timestamp-based store</h2>
+      <h3>Compresses all redundant triples, and annotates them with versions.</h3>
+      <center><img src="img/storage-overview.svg" alt="Storage overview" width="70%" /></center>
+      <div style="text-align: right; margin-right: 100px"><code>t<sub>1</sub> &isin; 1,2</code>, <code>t<sub>2</sub> &isin; 3,5</code>, <code>t<sub>3</sub> &isin; 1,2,4</code>, ...</div>
+    </section>
+    
+    <section id="querying-algos" class="slide" inlist="" rel="schema:hasPart" resource="#querying-algos">
+      <h2 property="schema:name">Streaming, offset-enabled querying</h2>
+      <ul>
+          <li class="next">
+              <h3>Triple pattern queries</h3>
+              <p class="indent">The foundational elements of SPARQL engines.</p>
+          </li>
+          <li class="next">
+              <h3>Streaming</h3>
+              <p class="indent">Triple-by-triple processing of results is more memory efficient.</p>
+          </li>
+          <li class="next">
+              <h3>Offsets</h3>
+              <p class="indent">Reduces processing time if only a subset is needed. <em>(e.g. pagination)</em></p>
+          </li>
+          <li class="next">
+              <h3>Algorithms for each query atom (VM, DM, VQ)</h3>
+              <p class="indent"><em>Algorithms are explained in the paper.</em></p>
+          </li>
       </ul>
     </section>
     
