@@ -65,9 +65,17 @@
       </ul>
     </section>
     
+    <section id="index-fundamentals" class="slide index">
+      <ul>
+        <li class="current"><a href="#index-fundamentals">RDF Versioning Fundamentals</a></li>
+        <li><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
+        <li><a href="#index-evaluation">Evaluation</a></li>
+      </ul>
+    </section>
+    
     <section id="rdf-versioning" class="slide" inlist="" rel="schema:hasPart" resource="#rdf-versioning">
       <span style="float: right"><em>Fernández et al. 2018</em></span>
-      <h2 property="schema:name">RDF Versioning</h2>
+      <h2 property="schema:name">RDF versioning</h2>
       <div class="next">
           <h3 style="margin-bottom: 0em">RDF Version <em>(i)</em></h3>
           <p style="float: right; color: gray; font-style: italic">DBpedia 2015, DBpedia 2016, ...</p>
@@ -97,7 +105,7 @@
     
     <section id="versioning-storage" class="slide" inlist="" rel="schema:hasPart" resource="#versioning-storage">
       <span style="float: right"><em>Fernández et al. 2018</em></span>
-      <h2 property="schema:name">Versioning Storage Strategies</h2>
+      <h2 property="schema:name">Versioning storage strategies</h2>
       <ul>
           <li><h3 style="margin-top: 0">Independent Copies (IC)</h3>
               <span class="indent">Stores every version completely.</span>
@@ -123,19 +131,77 @@
       </ul>
     </section>
     
-    <section id="index-fundamentals" class="slide index">
-      <ul>
-        <li class="current"><a href="#index-fundamentals">RDF Versioning Fundamentals</a></li>
-        <li><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
-        <li><a href="#index-evaluation">Evaluation</a></li>
-      </ul>
-    </section>
-    
     <section id="index-approach" class="slide index">
       <ul>
         <li><a href="#index-fundamentals">RDF Versioning Fundamentals</a></li>
         <li class="current"><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
         <li><a href="#index-evaluation">Evaluation</a></li>
+      </ul>
+    </section>
+    
+    <section id="hybrid-overview" class="slide" inlist="" rel="schema:hasPart" resource="#hybrid-overview">
+      <h2 property="schema:name">A hybrid storage approach</h2>
+      <p><em>Combining the best parts of all approaches.</em></p>
+      <ul>
+          <li class="next">
+              <h3>Independent Copy (IC) for the initial version</h3>
+              <p class="indent">Initial version can be stored in an efficient immutable store, such as HDT.</p>
+          </li>
+          <li class="next">
+              <h3>Change-Based (CB) for all following versions</h3>
+              <p class="indent">Instead of storing changes <em>relative to previous version</em>,<br />we make them <em>relative to the snapshot</em>.</p>
+          </li>
+          <li class="next">
+              <h3>Timestamp-Based (TB) storage for the CB chain</h3>
+              <p class="indent">Redundancy between changes is compressed by storing each triple once.</p>
+          </li>
+      </ul>
+    </section>
+    
+    <section id="hybrid-existing" class="slide" inlist="" rel="schema:hasPart" resource="#hybrid-existing">
+      <h2 property="schema:name">Hybrid storage has been done before</h2>
+      <h3>Hybrid Independent Copy (IC) and Change-Based (CB)</h3>
+      <center><img src="img/regular-delta-chain.svg" alt="Regular delta chain" width="100%" /></center>
+      <div class="next">
+          <strong>Problem:</strong><br />For long delta chains, version materialization becomes increasingly expensive.
+      </div>
+    </section>
+    
+    <section id="alternative-delta" class="slide" inlist="" rel="schema:hasPart" resource="#alternative-delta">
+      <h2 property="schema:name">We make deltas relative to the snapshot</h2>
+      <h3>This makes version materialization fast for any version</h3>
+      <center style="font-size: 3em"><img src="img/regular-delta-chain.svg" alt="Regular delta chain" width="40%" /> &rarr; <img src="img/alternative-delta-chain.svg" alt="Alternative delta chain" width="40%" /></center>
+      <div class="next">
+          <strong>Problem:</strong><br />Changes in deltas accumulate, which can lead to a lot of redundancy.
+      </div>
+    </section>
+    
+    <section id="timestamp-based" class="slide" inlist="" rel="schema:hasPart" resource="#timestamp-based">
+      <h2 property="schema:name">We combine all deltas in a<br />combined timestamp-based store</h2>
+      <h3>Compresses all redundant triples, and annotates them with versions.</h3>
+      <center><img src="img/storage-overview.svg" alt="Storage overview" width="70%" /></center>
+      <div style="text-align: right; margin-right: 100px"><code>t<sub>1</sub> &isin; 1,2</code>, <code>t<sub>2</sub> &isin; 3,5</code>, <code>t<sub>3</sub> &isin; 1,2,4</code>, ...</div>
+    </section>
+    
+    <section id="querying-algos" class="slide" inlist="" rel="schema:hasPart" resource="#querying-algos">
+      <h2 property="schema:name">Streaming, offset-enabled querying</h2>
+      <ul>
+          <li>
+              <h3>Triple pattern queries</h3>
+              <p class="indent">The foundational elements of SPARQL engines.</p>
+          </li>
+          <li>
+              <h3>Streaming</h3>
+              <p class="indent">Triple-by-triple processing of results is more memory efficient.</p>
+          </li>
+          <li>
+              <h3>Offsets</h3>
+              <p class="indent">Reduces processing time if only a subset is needed. <em>(e.g. pagination)</em></p>
+          </li>
+          <li>
+              <h3>Algorithms for each query atom (VM, DM, VQ)</h3>
+              <p class="indent"><em>Algorithms are explained in the paper.</em></p>
+          </li>
       </ul>
     </section>
     
@@ -145,6 +211,81 @@
         <li><a href="#index-approach">Hybrid Multiversion Storage Approach</a></li>
         <li class="current"><a href="#index-evaluation">Evaluation</a></li>
       </ul>
+    </section>
+    
+    <section id="implementation" class="slide" inlist="" rel="schema:hasPart" resource="#implementation">
+      <h2 property="schema:name">Implementation: OSTRICH</h2>
+      <center><img src="img/ostrich-square.png" alt="OSTRICH" width="150px" /></center>
+      <ul>
+          <li><em>Offset-enabled STore for TRIple CHangesets</em></li>
+          <li>Implemented in C/C++</li>
+          <li>Open-source: <a href="https://github.com/rdfostrich/">https://github.com/rdfostrich/</a></li>
+          <li>Uses HDT for snapshots, and Kyoto Cabinet (B+Tree) for deltas</li>
+      </ul>
+    </section>
+    
+    <section id="bear" class="slide" inlist="" rel="schema:hasPart" resource="#bear">
+      <span style="float: right"><em>Fernández et al. 2018</em></span>
+      <h2 property="schema:name">Evaluation using BEAR</h2>
+      <center><img src="img/bear.png" alt="BEAR" width="150px" /></center>
+      <ul>
+          <li><em>BEnchmark for rdf ARchives</em></li>
+          <li>Based on three real-world datasets from different domains</li>
+          <li>Triple pattern queries for the different query atoms</li>
+          <li>Baseline implementations of different storage strategies using HDT and Jena</li>
+      </ul>
+    </section>
+    
+    <section id="experiments" class="slide" inlist="" rel="schema:hasPart" resource="#experiments">
+      <h2 property="schema:name">Experiments</h2>
+      <ul>
+          <li>
+              <h3>Storage</h3>
+              <p class="indent">Storage sizes and ingestion times.</p>
+          </li>
+          <li>
+              <h3>Querying</h3>
+              <p class="indent">Query execution times for the different triple pattern query atoms.</p>
+          </li>
+      </ul>
+      <p><em>We highlight some results, more results can be found in the paper.</em></p>
+    </section>
+    
+    <section id="storage-large" class="slide" inlist="" rel="schema:hasPart" resource="#storage-large">
+      <h2 property="schema:name">Storage size and time scale linearly<br />for a few large versions</h2>
+      <p>BEAR-A: 10 versions, 30M~66M triples per version.</p>
+      <center>
+        <img src="img/storage-size-beara.svg" alt="beara size" width="450px" />
+        <img src="img/storage-time-beara.svg" alt="beara time" width="450px" />
+      </center>
+    </section>
+    
+    <section id="storage-small" class="slide" inlist="" rel="schema:hasPart" resource="#storage-small">
+      <h2 property="schema:name">Storage size and time <em>mostly</em> scale linearly for a many small versions</h2>
+      <p>BEAR-B-hourly: 1299 versions, ~48K triples per version.</p>
+      <center>
+        <img src="img/storage-size-bearb.svg" alt="bearb size" width="380px" /><br />
+        <img src="img/storage-time-bearb.svg" alt="bearb time" width="380px" />
+      </center>
+      <h3 style="margin-top: -16px">&rarr; Delta chain becomes too long after version 1100</h3>
+    </section>
+    
+    <section id="query-vm" class="slide" inlist="" rel="schema:hasPart" resource="#query-vm">
+      <h2 property="schema:name">Version Materialization times are constant with respect to version</h2>
+      <center><img src="img/results_bearb-hourly-vm-summary.svg" alt="vm" width="700px" /></center>
+      <p><em>Median BEAR-B-hourly VM query results for all triple patterns for all versions.</em></p>
+    </section>
+    
+    <section id="query-dm" class="slide" inlist="" rel="schema:hasPart" resource="#query-dm">
+      <h2 property="schema:name">Delta Materialization times are constant with respect to version</h2>
+      <center><img src="img/results_bearb-hourly-dm-summary.svg" alt="dm" width="700px" /></center>
+      <p><em>Median BEAR-B-hourly DM query results for all triple patterns for all versions.</em></p>
+    </section>
+    
+    <section id="query-vq" class="slide" inlist="" rel="schema:hasPart" resource="#query-vq">
+      <h2 property="schema:name">Verqion Queries are always fast</h2>
+      <center><img src="img/results_bearb-hourly-vq-summary.svg" alt="vq" width="800px" /></center>
+      <p><em>Median BEAR-B-hourly VQ query results for all triple patterns.</em></p>
     </section>
     
     <section id="index-final" class="slide index">
@@ -158,7 +299,25 @@
     <section id="conclusions" class="slide" inlist="" rel="schema:hasPart" resource="#conclusions">
         <h2 property="schema:name">Conclusions</h2>
         <ul>
-            <li>TODO</li>
+            <li>
+                <h3>Trade-off between different storage strategies</h3>
+                <p class="indent">Triple pattern query times for all query atoms of 1ms or less</p>
+            </li>
+            <li>
+                <h3>Offset-enabled query algorithms</h3>
+                <p class="indent">For efficient pagination of results</p>
+            </li>
+            <li>
+                <h3>OSTRICH as an open-source implementation</h3>
+                <p class="indent">Reusable in C/C++, including <a href="https://github.com/rdfostrich/ostrich-node">JavaScript bindings for Node.JS</a></p>
+            </li>
+            <li>
+                <h3>Practical usage of OSTRICH</h3>
+                <p class="indent">
+                    Versioned Triple Pattern Fragments: <a href="http://versioned.linkeddatafragments.org/bear" style="font-size: 0.7em">http://versioned.linkeddatafragments.org/bear</a>
+                    <br />
+                    Comunica SPARQL engine: <a href="https://github.com/rdfostrich/comunica-actor-init-sparql-ostrich" style="font-size: 0.7em">https://github.com/rdfostrich/comunica-actor-init-sparql-ostrich</a>
+            </li>
         </ul>
     </section>
 
