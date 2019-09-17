@@ -177,7 +177,7 @@
     </section>
     
     <section id="timestamp-based" class="slide" inlist="" rel="schema:hasPart" resource="#timestamp-based">
-      <h2 property="schema:name">We combine all deltas in a combined timestamp-based store</h2>
+      <h2 property="schema:name">We combine all deltas in a<br />combined timestamp-based store</h2>
       <h3>Compresses all redundant triples, and annotates them with versions.</h3>
       <center><img src="img/storage-overview.svg" alt="Storage overview" width="70%" /></center>
       <div style="text-align: right; margin-right: 100px"><code>t<sub>1</sub> &isin; 1,2</code>, <code>t<sub>2</sub> &isin; 3,5</code>, <code>t<sub>3</sub> &isin; 1,2,4</code>, ...</div>
@@ -219,7 +219,7 @@
       <ul>
           <li><em>Offset-enabled STore for TRIple CHangesets</em></li>
           <li>Implemented in C/C++</li>
-          <li><a href="https://github.com/rdfostrich/ostrich">Open-source</a></li>
+          <li>Open-source: <a href="https://github.com/rdfostrich/">https://github.com/rdfostrich/</a></li>
           <li>Uses HDT for snapshots, and Kyoto Cabinet (B+Tree) for deltas</li>
       </ul>
     </section>
@@ -299,7 +299,25 @@
     <section id="conclusions" class="slide" inlist="" rel="schema:hasPart" resource="#conclusions">
         <h2 property="schema:name">Conclusions</h2>
         <ul>
-            <li>TODO</li>
+            <li>
+                <h3>Trade-off between different storage strategies</h3>
+                <p class="indent">Triple pattern query times for all query atoms of 1ms or less</p>
+            </li>
+            <li>
+                <h3>Offset-enabled query algorithms</h3>
+                <p class="indent">For efficient pagination of results</p>
+            </li>
+            <li>
+                <h3>OSTRICH as an open-source implementation</h3>
+                <p class="indent">Reusable in C/C++, including <a href="https://github.com/rdfostrich/ostrich-node">JavaScript bindings for Node.JS</a></p>
+            </li>
+            <li>
+                <h3>Practical usage of OSTRICH</h3>
+                <p class="indent">
+                    Versioned Triple Pattern Fragments: <a href="http://versioned.linkeddatafragments.org/bear" style="font-size: 0.7em">http://versioned.linkeddatafragments.org/bear</a>
+                    <br />
+                    Comunica SPARQL engine: <a href="https://github.com/rdfostrich/comunica-actor-init-sparql-ostrich" style="font-size: 0.7em">https://github.com/rdfostrich/comunica-actor-init-sparql-ostrich</a>
+            </li>
         </ul>
     </section>
 
