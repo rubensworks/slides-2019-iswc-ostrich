@@ -139,25 +139,6 @@
       </ul>
     </section>
     
-    <section id="hybrid-overview" class="slide" inlist="" rel="schema:hasPart" resource="#hybrid-overview">
-      <h2 property="schema:name">A hybrid storage approach</h2>
-      <p><em>Combining the best parts of all approaches.</em></p>
-      <ul>
-          <li class="next">
-              <h3>Independent Copy (IC) for the initial version</h3>
-              <p class="indent">Initial version can be stored in an efficient immutable store, such as HDT.</p>
-          </li>
-          <li class="next">
-              <h3>Change-Based (CB) for all following versions</h3>
-              <p class="indent">Instead of storing changes <em>relative to previous version</em>,<br />we make them <em>relative to the snapshot</em>.</p>
-          </li>
-          <li class="next">
-              <h3>Timestamp-Based (TB) storage for the CB chain</h3>
-              <p class="indent">Redundancy between changes is compressed by storing each triple once.</p>
-          </li>
-      </ul>
-    </section>
-    
     <section id="hybrid-existing" class="slide" inlist="" rel="schema:hasPart" resource="#hybrid-existing">
       <h2 property="schema:name">Hybrid storage has been done before</h2>
       <h3>Hybrid Independent Copy (IC) and Change-Based (CB)</h3>
